@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { db } from "../lib/db";
+import { requireUserId } from "../lib/session";
 import { currentPeriod, objectiveProgress, pct, periodElapsed, status, type Status } from "../lib/okr";
 import { ProgressBar, StatusBadge } from "./components";
 
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard({ searchParams }: { searchParams: Promise<{ period?: string }> }) {
+  const ownerId = await requireUserId();
   const sp = await searchParams;
   const period = sp.period || currentPeriod();
 
   const [objectives, periodsRaw] = await Promise.all([
-    db.objective.findMany({ where: { period }, include: { keyResults: true }, orderBy: { createdAt: "asc" } }),
-    db.objective.findMany({ select: { period: true }, distinct: ["period"] }),
+    db.objective.findMany({ where: { ownerId, period }, include: { keyResults: true }, orderBy: { createdAt: "asc" } }),
+    db.objective.findMany({ where: { ownerId }, select: { period: true }, distinct: ["period"] }),
   ]);
   const periods = Array.from(new Set([currentPeriod(), period, ...periodsRaw.map((p) => p.period)])).sort().reverse();
 

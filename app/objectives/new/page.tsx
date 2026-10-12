@@ -1,8 +1,10 @@
 import { createObjective } from "../../actions";
 import { PeriodSelect } from "../../components";
 import { currentPeriod, periodOptions } from "../../../lib/okr";
+import { requireUserId } from "../../../lib/session";
 
 export default async function NewObjective({ searchParams }: { searchParams: Promise<{ period?: string }> }) {
+  await requireUserId();
   const sp = await searchParams;
   return (
     <>
