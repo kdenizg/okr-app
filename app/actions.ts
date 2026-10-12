@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "../lib/db";
+import { requireUserId } from "../lib/session";
 
 function str(fd: FormData, key: string): string {
   return String(fd.get(key) ?? "").trim();
@@ -16,17 +17,31 @@ function num(fd: FormData, key: string, fallback?: number): number {
   return n;
 }
 
+/** Hedef giriş yapmış kullanıcıya ait değilse hata verir. */
+async function ownedObjectiveId(id: string, ownerId: string): Promise<string> {
+  const o = await db.objective.findFirst({ where: { id, ownerId }, select: { id: true } });
+  if (!o) throw new Error("Hedef bulunamadı");
+  return o.id;
+}
+
+async function ownedKeyResultId(id: string, ownerId: string): Promise<string> {
+  const kr = await db.keyResult.findFirst({ where: { id, objective: { ownerId } }, select: { id: true } });
+  if (!kr) throw new Error("Anahtar sonuç bulunamadı");
+  return kr.id;
+}
+
 export async function createObjective(fd: FormData) {
+  const ownerId = await requireUserId();
   const title = str(fd, "title");
   if (!title) throw new Error("Başlık gerekli");
   const objective = await db.objective.create({
-    data: { title, description: str(fd, "description") || null, period: str(fd, "period") },
+    data: { ownerId, title, description: str(fd, "description") || null, period: str(fd, "period") },
   });
   redirect(`/objectives/${objective.id}`);
 }
 
 export async function updateObjective(fd: FormData) {
-  const id = str(fd, "id");
+  const id = await ownedObjectiveId(str(fd, "id"), await requireUserId());
   const title = str(fd, "title");
   if (!title) throw new Error("Başlık gerekli");
   await db.objective.update({
@@ -38,13 +53,14 @@ export async function updateObjective(fd: FormData) {
 }
 
 export async function deleteObjective(fd: FormData) {
-  await db.objective.delete({ where: { id: str(fd, "id") } });
+  const id = await ownedObjectiveId(str(fd, "id"), await requireUserId());
+  await db.objective.delete({ where: { id } });
   revalidatePath("/");
   redirect("/");
 }
 
 export async function createKeyResult(fd: FormData) {
-  const objectiveId = str(fd, "objectiveId");
+  const objectiveId = await ownedObjectiveId(str(fd, "objectiveId"), await requireUserId());
   const title = str(fd, "title");
   if (!title) throw new Error("Başlık gerekli");
   const startValue = num(fd, "startValue", 0);
@@ -63,14 +79,15 @@ export async function createKeyResult(fd: FormData) {
 }
 
 export async function deleteKeyResult(fd: FormData) {
-  const kr = await db.keyResult.delete({ where: { id: str(fd, "id") } });
+  const id = await ownedKeyResultId(str(fd, "id"), await requireUserId());
+  const kr = await db.keyResult.delete({ where: { id } });
   revalidatePath(`/objectives/${kr.objectiveId}`);
   revalidatePath("/");
 }
 
 /** İlerleme güncellemesi: değeri kaydeder ve geçmişe check-in ekler. */
 export async function checkIn(fd: FormData) {
-  const keyResultId = str(fd, "keyResultId");
+  const keyResultId = await ownedKeyResultId(str(fd, "keyResultId"), await requireUserId());
   const value = num(fd, "value");
   const note = str(fd, "note") || null;
   const [, kr] = await db.$transaction([

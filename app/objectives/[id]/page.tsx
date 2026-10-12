@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "../../../lib/db";
+import { requireUserId } from "../../../lib/session";
 import { krProgress, objectiveProgress, pct, periodElapsed, periodOptions, status } from "../../../lib/okr";
 import { checkIn, createKeyResult, deleteKeyResult, deleteObjective, updateObjective } from "../../actions";
 import { PeriodSelect, ProgressBar, StatusBadge } from "../../components";
@@ -13,9 +14,10 @@ function fmt(n: number, unit?: string | null) {
 }
 
 export default async function ObjectivePage({ params }: { params: Promise<{ id: string }> }) {
+  const ownerId = await requireUserId();
   const { id } = await params;
-  const o = await db.objective.findUnique({
-    where: { id },
+  const o = await db.objective.findFirst({
+    where: { id, ownerId },
     include: {
       keyResults: {
         orderBy: { createdAt: "asc" },

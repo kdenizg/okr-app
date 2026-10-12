@@ -56,3 +56,12 @@ input, textarea, select { font: inherit; color: inherit; background: var(--bg); 
 .history { margin: .4rem 0 0; padding-left: 1rem; font-size: .88rem; }
 details summary { cursor: pointer; }
 @media (max-width: 560px) { .grid3 { grid-template-columns: 1fr; } }
+.topbar-right { display: flex; align-items: center; gap: .9rem; }
+.auth { max-width: 380px; margin: 2rem auto; display: grid; gap: 1rem; }
+.btn.wide { width: 100%; justify-self: stretch; }
+.btn.secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+.alert { margin: 0; padding: .6rem .8rem; border-radius: 8px; border: 1px solid var(--bad); color: var(--bad); font-size: .9rem; }
+.divider { display: flex; align-items: center; gap: .6rem; color: var(--muted); font-size: .85rem; }
+.divider::before, .divider::after { content: ""; flex: 1; border-top: 1px solid var(--border); }
+.a { color: var(--accent); }
+@media (max-width: 560px) { .topbar-right .user { display: none; } }
