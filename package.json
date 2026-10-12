@@ -1,0 +1,24 @@
+{
+  "name": "okr-app",
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "prisma migrate deploy",
+    "dev": "next dev",
+    "build": "prisma generate && next build",
+    "start": "next start",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.3",
+    "next": "^15.5.27",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "prisma": "^6.19.3",
+    "typescript": "~5.9"
+  },
+  "private": true
+}

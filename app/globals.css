@@ -1,0 +1,58 @@
+:root {
+  --bg: #f7f7f8; --card: #fff; --text: #18181b; --muted: #71717a; --border: #e4e4e7;
+  --accent: #4f46e5; --good: #16a34a; --warn: #d97706; --bad: #dc2626; --done: #0891b2;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0f0f11; --card: #18181b; --text: #f4f4f5; --muted: #a1a1aa; --border: #27272a; --accent: #818cf8; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+a { color: inherit; text-decoration: none; }
+h1 { font-size: 1.6rem; margin: .25rem 0; }
+h2, h3 { margin: 0; font-size: 1.05rem; }
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: .75rem 1rem; border-bottom: 1px solid var(--border); background: var(--card); }
+.brand { font-weight: 700; letter-spacing: .05em; }
+.container { max-width: 860px; margin: 0 auto; padding: 1.25rem 1rem 4rem; }
+.page-head { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.periods { display: flex; gap: .4rem; flex-wrap: wrap; }
+.chip { padding: .2rem .65rem; border: 1px solid var(--border); border-radius: 999px; font-size: .85rem; color: var(--muted); }
+.chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .75rem; margin-bottom: 1.25rem; }
+.stat { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: .8rem 1rem; }
+.stat-label { color: var(--muted); font-size: .8rem; }
+.stat-value { font-size: 1.6rem; font-weight: 650; }
+.stat-sub { color: var(--muted); font-size: .8rem; }
+.warn { color: var(--warn); } .bad { color: var(--bad); }
+.list { list-style: none; padding: 0; margin: 0 0 1rem; display: grid; gap: .75rem; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; display: grid; gap: .5rem; }
+.card-link { display: grid; gap: .5rem; }
+.card-link:hover h2 { color: var(--accent); }
+.row { display: flex; gap: .75rem; align-items: center; justify-content: space-between; }
+.bar { flex: 1; height: 8px; background: var(--border); border-radius: 999px; overflow: hidden; }
+.bar-fill { height: 100%; background: var(--accent); transition: width .3s; }
+.pct { min-width: 3rem; text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+.badge { font-size: .75rem; padding: .15rem .55rem; border-radius: 999px; white-space: nowrap; border: 1px solid currentColor; }
+.s-on-track { color: var(--good); } .bar-fill.s-on-track { background: var(--good); }
+.s-at-risk { color: var(--warn); } .bar-fill.s-at-risk { background: var(--warn); }
+.s-behind { color: var(--bad); } .bar-fill.s-behind { background: var(--bad); }
+.s-done { color: var(--done); } .bar-fill.s-done { background: var(--done); }
+.s-none { color: var(--muted); }
+.muted { color: var(--muted); font-size: .88rem; }
+.desc { margin: 0 0 .75rem; }
+.section { margin-top: 1.75rem; margin-bottom: .75rem; }
+.empty { text-align: center; padding: 2.5rem 1rem; background: var(--card); border: 1px dashed var(--border); border-radius: 10px; }
+.form { display: grid; gap: .8rem; max-width: 620px; }
+.form.card { max-width: none; }
+label { display: grid; gap: .3rem; font-size: .9rem; font-weight: 500; }
+input, textarea, select { font: inherit; color: inherit; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: .5rem .65rem; width: 100%; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; }
+.inline-form { display: flex; gap: .5rem; flex-wrap: wrap; }
+.inline-form input[name="value"] { width: 8rem; flex: none; }
+.inline-form input[name="note"] { flex: 1; min-width: 10rem; width: auto; }
+.btn { display: inline-block; background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: .5rem .9rem; font: inherit; font-weight: 500; cursor: pointer; justify-self: start; }
+.btn.small { padding: .4rem .75rem; }
+.link { background: none; border: 0; padding: 0; font: inherit; cursor: pointer; color: var(--muted); }
+.danger { color: var(--bad); font-size: .85rem; }
+.history { margin: .4rem 0 0; padding-left: 1rem; font-size: .88rem; }
+details summary { cursor: pointer; }
+@media (max-width: 560px) { .grid3 { grid-template-columns: 1fr; } }
